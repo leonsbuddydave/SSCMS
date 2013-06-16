@@ -3,7 +3,7 @@ class DocumentFragment extends Node
 {
 	var $nodes = array();
 
-	var $operators = array(">", "+", "^", "*", "#", ".");
+	var $operators = array(">", "+", "^", "*", "#", ".", "[", "]", "=", " ");
 
 	/*
 		Allows us to build this document fragment
@@ -109,10 +109,6 @@ class DocumentFragment extends Node
 						// but it doesn't cost me much to just have this here
 					break;
 				}
-			}
-			else if ( $this->isNumeric($element) )
-			{
-
 			}
 
 			$lastTokenUsed = $elements[$i];
