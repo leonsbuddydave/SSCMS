@@ -4,11 +4,16 @@
 		var $children = array();
 		var $parentNode = null;
 
+		// appends a new child to this node and
+		// then returns it
+		// good chaining shit
 		public function append(HTMLNode $node)
 		{
 			// my son
 			$node->setParent($this);
 			$this->children[] = $node;
+			
+			return $node;
 		}
 
 		public function setParent($parent)
