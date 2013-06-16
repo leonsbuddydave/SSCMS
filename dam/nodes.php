@@ -97,18 +97,10 @@
 			Turns this node and its children into a flattened string
 			state for printing (converts them to actual HTML)
 		*/
-		public function flatten($pretty = false, $level = 0)
+		public function flatten()
 		{
 			// Create the start of the tag
 			$startTag = "<" . $this->tagName;
-
-			// generate a tab block - used for pretty printing
-			$tabs = "";
-			for ($i = 0; $i < $level; $i++)
-				$tabs .= "\t";
-
-			// append the tab block before the opening tag
-			$startTag = $tabs . $startTag;
 
 			// if this node has any classes, append them
 			if ($this->hasAnyClasses())
@@ -139,23 +131,15 @@
 			// Add the end of the start tag
 			$startTag .= ">";
 
-			// add a newline after the opening tag for pretty's sake
-			if ( $pretty )
-				$startTag .= "\n";
-
 			// Somewhere in here we'll need to add the tag's
 			// contents, as well as its flattened children
 			foreach ($this->children as $child)
 			{
-				$startTag .= $child->flatten($pretty, $level + 1);
+				$startTag .= $child->flatten();
 			}
 
 			// Attach the end tag
-			$startTag .= $tabs . "</" . $this->tagName . ">";
-
-			// a newline after the end tag
-			if ($pretty)
-				$startTag .= "\n";
+			$startTag .=  "</" . $this->tagName . ">";
 
 			return $startTag;
 		}
@@ -173,14 +157,9 @@
 
 		var $operators = array(">", "+", "^", "*", "#", ".");
 
-		function __construct()
-		{
-
-		}
-
 		/*
 			Allows us to build this document fragment
-			using emmet-like shorthand
+			using Emmet-like shorthand
 		*/
 		public function buildFromShorthand($shorthandString)
 		{
