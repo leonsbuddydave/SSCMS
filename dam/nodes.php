@@ -40,6 +40,11 @@
 			$this->tagName = $tagName;
 		}
 
+		function __clone()
+		{
+			$this->children = array();
+		}
+
 		public function setNodeType($tagName)
 		{
 			$this->tagName = $tagName;

@@ -13,7 +13,7 @@
 	print $n->flatten(true);
 
 	$d = new DocumentFragment();
-	$d->buildFromShorthand("ul>li+img+div#shit.fart.dick");
+	$d->buildFromShorthand("ul>li+img+div#shit.fart.dick*3");
 	print $d->flatten();
 ?>
 

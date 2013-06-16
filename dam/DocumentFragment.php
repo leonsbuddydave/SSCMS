@@ -83,6 +83,26 @@ class DocumentFragment extends Node
 						}
 					break;
 
+					case "*":
+						{
+							if ( !$this->isNumeric($elements[$i + 1]) )
+								throw new Exception("Emmet Syntax: Multiplication operator without operand.");
+
+							// Basically we need to clone that
+							// <--- object
+							// -----> that many times
+							// woo
+							// Emmet supports parenthese grouping for this operation, but for my current
+							// level of interest in this project, fuuuuuck that
+							$c = intval( $elements[$i + 1] ) - 1;
+							for ($j = 0; $j < $c; $j++)
+							{
+								$copy = clone $lastElementCreated;
+								$currentContext->append($copy);
+							}
+						}
+					break;
+
 					// adding another element onto the current context
 					case "+":
 						// we shouldn't really have to do anything here
