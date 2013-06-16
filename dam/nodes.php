@@ -4,11 +4,6 @@
 		var $children = array();
 		var $parentNode = null;
 
-		function __construct()
-		{
-
-		}
-
 		public function append(HTMLNode $node)
 		{
 			// my son
@@ -33,6 +28,12 @@
 		var $closingTag = true;
 		var $attrs = array();
 		var $classes = array();
+
+		// text contents, for tags like p and script
+		// these are tags that shouldn't have children,
+		// but if they do,
+		// the text will come beforehand
+		var $contents = "";
 
 		function __construct($tagName)
 		{
@@ -88,6 +89,11 @@
 			}
 		}
 
+		public function setContents($stringContents)
+		{
+			$this->contents = $stringContents;
+		}
+
 		public function hasAnyClasses()
 		{
 			return count($this->classes) > 0;
@@ -129,7 +135,7 @@
 			}
 
 			// Add the end of the start tag
-			$startTag .= ">";
+			$startTag .= ">" . $this->contents;
 
 			// Somewhere in here we'll need to add the tag's
 			// contents, as well as its flattened children
@@ -151,181 +157,6 @@
 		}
 	}
 
-	class DocumentFragment extends Node
-	{
-		var $nodes = array();
-
-		var $operators = array(">", "+", "^", "*", "#", ".");
-
-		/*
-			Allows us to build this document fragment
-			using Emmet-like shorthand
-		*/
-		public function buildFromShorthand($shorthandString)
-		{
-			// we have a shorthand string to parse here
-			// we'll use this to generate a document chunk
-			$elements = $this->explodeShorthandString($shorthandString);
-
-			// make this the top level element at the moment
-			$currentContext = $this;
-
-			$lastElementCreated = null;
-			$lastTokenUsed = null;
-
-			$l = count($elements);
-			for ($i = 0; $i < $l; $i++)
-			{
-				$element = $elements[$i];
-
-				// this is going to be a bit ugly
-				if ( $this->isTagName($element) )
-				{
-					// Create a new element of this type
-					$n = new HTMLNode($element);
-
-					// Append it to whatever our current context is
-					$currentContext->append( $n );
-
-					// set that as the most recently created element
-					$lastElementCreated = $n;
-				}
-				else if ( $this->isOperator($element) )
-				{
-					switch ($element)
-					{
-						// moving down into the previous context
-						case ">":
-							{ $currentContext = $lastElementCreated; }
-						break;
-
-						// moving up a context
-						case "^":
-							{
-								$targetContext = $currentContext->getParent();
-
-								if ($targetContext !== null)
-									$currentContext = $targetContext;
-							}
-						break;
-
-						// create an element with this id
-						case "#":
-							{
-								$target = null;
-
-								// if the previous token was an element,
-								// our ID operation will target it
-								if ( $this->isTagName( $lastTokenUsed ) )
-								{
-									$target = $lastElementCreated;
-								}
-								else // we'll make a new thing to target
-								{
-									$target = new Div();
-									$currentContext->append($target);
-									$lastElementCreated = $target;
-								}
-
-								$target->setID( $elements[++$i] );
-							}
-						break;
-
-						// create an element with this class
-						case ".":
-							{
-								$target = null;
-
-								// if the previous token was an element,
-								// our ID operation will target it
-								if ( $this->isTagName( $lastTokenUsed ) )
-								{
-									$target = $lastElementCreated;
-								}
-								else // we'll make a new thing to target
-								{
-									$target = new Div();
-									$currentContext->append($target);
-									$lastElementCreated = $target;
-								}
-
-								$target->addClass( $elements[++$i] );
-							}
-						break;
-
-						// adding another element onto the current context
-						case "+":
-							// should not change context at all
-						break;
-					}
-				}
-				else if ( $this->isNumeric($element) )
-				{
-
-				}
-
-				$lastTokenUsed = $elements[$i];
-			}
-		}
-
-		public function flatten()
-		{
-			$output = "";
-			foreach ($this->children as $child)
-			{
-				$output .= $child->flatten();
-			}
-
-			return $output;
-		}
-
-		public function isOperator($o)
-		{
-			return in_array($o, $this->operators);
-		}
-
-		public function isTagName($t)
-		{
-			// may be kind of naive here, we'll see
-			return !preg_match('/[^A-Za-z]+/', $t);
-		}
-
-		public function isNumeric($n)
-		{
-			return preg_match('/[0-9]+/', $n);
-		}
-
-		private function explodeShorthandString($shorthandString)
-		{
-			// elements consist of one chunk of shorthand
-			// be it an element, operator or other
-			$elements = array("");
-			$elIndex = 0;
-			$tokens = str_split($shorthandString);
-
-			foreach ($tokens as $t)
-			{
-				// if we're at an operator
-				if ( $this->isOperator($t) )
-				{
-					// append the operator
-					$elements[] = $t;
-
-					// add a string as the next guy
-					// in preparation for an element
-					$elements[] = "";
-				}
-				else
-				{
-					$i = count($elements) - 1;
-					$elements[ $i ] .= $t;
-				}
-			}
-
-			return $elements;
-		}
-	}
-
 	class Div extends HTMLNode
 	{
 		var $tagName = "div";
@@ -334,5 +165,10 @@
 		{
 
 		}
+	}
+
+	class P extends HTMLNode
+	{
+		var $tagName = "p";
 	}
 ?>
