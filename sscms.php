@@ -2,6 +2,7 @@
 	require_once("dam/dam.php");
 	require_once("category.php");
 	require_once("entry.php");
+	require_once("entryquery.php");
 
 	// for testing purposes
 	$d = new Category("blog");
@@ -9,10 +10,28 @@
 
 	$c = new Category("blog");
 	
-	$e = new Entry();
-	$e->setData("title", "Particle Man Gets Wet");
+	$testSetSize = 100;
 
-	$c->AddEntry( $e );
+	// add a bunch of stupid entries
+	for ($i = 0; $i < $testSetSize; $i++)
+	{
+		$e = new Entry();
+		$e->setData("title", "Lorem ipsum dolor set amet.");
+		$c->AddEntry( $e );
+	}
+
+	// Remove every tenth entry
+	for ($i = 0; $i < $testSetSize; $i++)
+	{
+		if ( $i % 10 == 0 )
+			$c->RemoveEntryById($i);
+	}
+
+	$f = new EntryQuery("category=blog&id=8,29");
+	print_r( $f->Exec() );
+
+	$f = new EntryQuery("category=blog&count=10&offset=15");
+	print_r( $f->Exec() );
 ?>
 
 <?php

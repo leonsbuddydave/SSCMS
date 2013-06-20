@@ -16,7 +16,7 @@
 		// some useful filenames
 		var $CategoryFilename, $DefinitionFilename;
 
-		// 
+		// ...entries
 		var $Entries;
 
 		function __construct($name)
@@ -32,6 +32,11 @@
 			$this->ReadEntries();
 		}
 
+		public function GetEntries()
+		{
+			return $this->Entries->posts;
+		}
+
 		function CategoryExists()
 		{
 			return file_exists($this->CategoryFilename)
@@ -41,7 +46,6 @@
 		function ReadEntries()
 		{
 			$this->Entries = json_decode( Read::FileContents( $this->CategoryFilename ) );
-			print_r($this->Entries);
 		}
 
 		function Commit()
@@ -62,6 +66,71 @@
 
 			// save
 			$this->Commit();
+		}
+
+		public function RemoveEntryById($entryID)
+		{
+			// find it
+			$index = $this->GetEntryIndexById($entryID);
+
+			// kill it
+			array_splice($this->Entries->posts, $index, 1 );
+
+			// finish it
+			$this->Commit();
+		}
+
+		/*
+			This function and the next one are very similar
+			the only difference is that one returns only the index,
+			while the other returns the entire entry
+			This decision may make me an idiot
+		*/
+		public function GetEntryById($entryID)
+		{
+			// php is fucking unreadable
+			return $this->Entries->posts[ $this->GetEntryIndexById($entryID) ];
+		}
+
+		public function GetEntryIndexById($entryID)
+		{
+			$i = $entryID;
+			$ec = count( $this->Entries->posts );
+
+			// this is what to check for in 
+			// case the requested entry does not exist
+			$index = -1;
+
+			// if we hit it right on the mark, whee
+			if ( $this->Entries->posts[$i]->id == $entryID )
+				$index = $i;
+			else
+			{
+				// otherwise we have to play 
+				// "Which Direction To Iterate"
+				$t = 0;
+				if ( $this->Entries->posts[$i]->id < $entryID )
+					$t = 1;
+				else
+					$t = -1;
+
+				// iterate in the chosen direction within the
+				// bounds of the entry
+				while ( $i > 0 && $i < $ec )
+				{
+					// if our id matches, we got it
+					if ( $this->Entries->posts[$i]->id == $entryID )
+					{
+						$index = $i;
+						break; // found it, go
+					}
+
+					// iterate up or down
+					$i += $t;
+				}
+			}
+
+			return $index;
 		}
 
 		public function Create()
