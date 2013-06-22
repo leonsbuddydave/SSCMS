@@ -142,6 +142,22 @@ class DocumentFragment extends Node
 		return preg_match('/[0-9]+/', $n);
 	}
 
+	/*
+		Concatenates this and another DocumentFragment
+	*/
+	public function combineWith(DocumentFragment $docFrag)
+	{
+		$nodes = $docFrag->getNodes();
+		
+		foreach ($nodes as $node)
+			$this->nodes[] = $node;
+	}
+
+	public function getNodes()
+	{
+		return $this->nodes;
+	}
+
 	private function explodeShorthandString($shorthandString)
 	{
 		// elements consist of one chunk of shorthand

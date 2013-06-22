@@ -1,5 +1,5 @@
 <?php
-
+	
 ?>
 
 <!doctype html>
@@ -13,7 +13,17 @@
 	<body>
 		
 		<div class="categoryBuilder">
+			
+			<div class="formBrick">
+				<input type="text" name="category-name" id='category-name' placeholder='Category Name' />
+			</div>		
+
+			<div id="categoryForm">
 				
+				
+
+			</div>
+
 		</div>
 	
 		<div class="toolbar">

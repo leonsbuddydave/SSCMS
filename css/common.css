@@ -14,5 +14,29 @@ body, html
 {
 	width: 30%;
 	height: 100%;
-	float: left;
+	position: fixed;
+	right: 0;
+	top: 0;
+	background-color: #0f0;
 }
+
+.formBrick
+{
+	padding: 20px;
+}
+
+.formBrick input[type="text"]
+{
+	font-size: 18pt;
+	width: 600px;
+}
+
+#categoryForm
+{
+	width: 700%;
+}
+
+	#categoryForm .formBrick
+	{
+		width: 100%;
+	}
