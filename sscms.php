@@ -5,7 +5,7 @@
 	require_once("entryquery.php");
 
 	// for testing purposes
-	$d = new Category("blog");
+	/*$d = new Category("blog");
 	$d->Destroy();
 
 	$c = new Category("blog");
@@ -32,6 +32,10 @@
 
 	$f = new EntryQuery("category=blog&count=10&offset=15");
 	print_r( $f->Exec() );
+
+	// this is weird as shit I hate that this works
+	$type = "EntryQuery";
+	$s = new $type("category=blog");*/
 ?>
 
 <?php

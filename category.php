@@ -3,33 +3,37 @@
 	require_once("read.php");
 	require_once("directories.php");
 	require_once("extensions.php");
+	require_once("definition.php");
 
 	class Category
 	{
 
 		const DEFAULT_CATEGORY_CONTENTS = '{"posts":[],"last_id":-1}';
-		const DEFAULT_CATEGORY_DEFINITION = '{"fields":{}}';
 
 		// the name of this category
 		var $CategoryName;
 
 		// some useful filenames
-		var $CategoryFilename, $DefinitionFilename;
+		var $CategoryFilename;
 
 		// ...entries
 		var $Entries;
+
+		// definition of this category
+		var $Definition;
 
 		function __construct($name)
 		{
 			$this->CategoryName = $name;
 
 			$this->CategoryFilename = Directories::CATEGORY . $name . "." . Extensions::CATEGORY;
-			$this->DefinitionFilename = Directories::CATEGORY . $name . "." . Extensions::CATEGORY_DEFINITION;
 		
 			if (!$this->CategoryExists())
 				$this->Create();
 
 			$this->ReadEntries();
+		
+			$this->Definition = new Definition($name);
 		}
 
 		public function GetEntries()
@@ -39,8 +43,7 @@
 
 		function CategoryExists()
 		{
-			return file_exists($this->CategoryFilename)
-				&& file_exists($this->DefinitionFilename);
+			return file_exists($this->CategoryFilename);
 		}
 
 		function ReadEntries()
@@ -137,15 +140,13 @@
 		{
 			// Category storage file - holds all the data
 			Write::WholeFile($this->CategoryFilename, self::DEFAULT_CATEGORY_CONTENTS);
-
-			// Category structure file - defines the structure of the data
-			Write::WholeFile($this->DefinitionFilename, self::DEFAULT_CATEGORY_DEFINITION);
 		}
 
 		public function Destroy()
 		{
 			Write::Delete( $this->CategoryFilename );
-			Write::Delete( $this->DefinitionFilename );
+
+			$this->Definition->Destroy();
 		}
 	}
 ?>
