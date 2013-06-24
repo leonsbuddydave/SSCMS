@@ -1,0 +1,7 @@
+[
+	{
+		"plaintext_name" : "Text",
+		"default_identifier" : "text-$",
+		"html" : "<input type='text' name='{identifier}' placeholder='Some text goes here...' />"
+	}
+]

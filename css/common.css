@@ -5,38 +5,61 @@ body, html
 
 .categoryBuilder
 {
-	width: 70%;
 	height: 100%;
-	float: left;
+	outline: solid 1px black;
+	margin-right: 300px;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .toolbar
 {
-	width: 30%;
+	width: 300px;
 	height: 100%;
 	position: fixed;
-	right: 0;
+	float: right;
 	top: 0;
+	right: 0;
 	background-color: #0f0;
 }
+
+	.toolbar > .fields
+	{
+		width: 100%;
+		float: left;
+	}
+
+		.toolbar > .fields > .fieldButton
+		{
+			width: 50%;
+			height: 20px;
+			float: left;
+			outline: solid 1px black;
+		}
+
+			.fieldButton > a
+			{
+				margin: 10 0;
+				text-align: center;
+			}
 
 .formBrick
 {
 	padding: 20px;
+	width: 70%;
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .formBrick input[type="text"]
 {
 	font-size: 18pt;
-	width: 600px;
+	width: 100%;
 }
 
 #categoryForm
 {
 	width: 700%;
 }
-
-	#categoryForm .formBrick
-	{
-		width: 100%;
-	}
